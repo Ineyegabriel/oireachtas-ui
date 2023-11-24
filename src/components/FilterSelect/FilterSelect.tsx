@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { Theme, useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { RootState, useAppSelector } from '@features/store';
-import { useSearchParam } from '@hooks/useSearchParam';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;

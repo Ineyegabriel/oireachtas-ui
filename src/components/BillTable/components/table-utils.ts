@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { removeFavorite, setFavorites } from '@features/legislation/legislationSlice';
 import { useAppDispatch, useAppSelector, RootState } from '@features/store';
 import { ExtractedDataType } from '@hooks/useTableData';
@@ -75,4 +75,17 @@ export const useTableBody = () => {
     title,
     favorites,
   };
+};
+
+/**
+ * helper function to check if current title is in favorites list
+ * @param favorites Array
+ * @param title string
+ * @returns boolean
+ */
+export const CheckIsFavorites = (favorites: string[], title: string) => {
+  const isFavorited = useMemo(() => {
+    return favorites.includes(title);
+  }, [favorites, title]);
+  return isFavorited;
 };

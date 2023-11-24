@@ -1,29 +1,25 @@
-import { useEffect, useMemo } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { RootState, useAppDispatch, useAppSelector } from '@features/store';
 import { fetchLegislation } from '@features/legislation/legislationSlice';
 import { StyleSheetManager } from 'styled-components';
-import { ExtractedDataType, tableHeaderData, useTableData } from '@hooks/useTableData';
+import { tableHeaderData, useTableData } from '@hooks/useTableData';
 import { Root } from './BillTable.styled';
 import TableBody from './components/TableBody';
 import TablePagination from './components/TablePagination';
 import { Skeleton } from '@mui/material';
 import { usePagination } from './usePagination';
 
-const BillTable = () => {
+const BillTable: FunctionComponent = () => {
   const { page, rowsPerPage, onChangePage, onChangeRowsPerPage } = usePagination();
 
   const { queryRecord, isLoading, legislation } = useAppSelector((state: RootState) => state.legislation);
   const dispatch = useAppDispatch();
+  const { tableData } = useTableData(legislation);
 
   useEffect(() => {
     dispatch(fetchLegislation(queryRecord));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const tableData: ExtractedDataType[] = useMemo(() => {
-    const { tableData: transformedData } = useTableData(legislation);
-    return transformedData;
-  }, [legislation]);
 
   if (isLoading) {
     return <Skeleton variant="rounded" width="100%" height="70dvh" />;

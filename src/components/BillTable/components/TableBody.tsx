@@ -1,10 +1,9 @@
-import { useMemo } from 'react';
 import { ExtractedDataType } from '@hooks/useTableData';
 import { FunctionComponent } from 'react';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
 import TitleModal from '@components/Modal/TitleModal';
-import { useGetPaginatedData, useTableBody } from './table-utils';
+import { CheckIsFavorites, useGetPaginatedData, useTableBody } from './table-utils';
 
 type TableBodyProps = {
   rowsPerPage: number;
@@ -21,12 +20,14 @@ const TableBody: FunctionComponent<TableBodyProps> = ({ rowsPerPage, tableData, 
   const { paginatedData } = useGetPaginatedData(tableData, page, rowsPerPage);
   return (
     <>
-      <TitleModal open={open} setOpen={handleOpen} title={title} />
+      <tr>
+        <td>
+          <TitleModal open={open} setOpen={handleOpen} title={title} />
+        </td>
+      </tr>
       {paginatedData.map(
         ({ billNo, billType, status, sponsors, longTitleEn, longTitleGa, billShortTitleEnSort }, index) => {
-          const isFavorited = useMemo(() => {
-            return favorites.includes(billShortTitleEnSort);
-          }, [favorites]);
+          const isFavorited = CheckIsFavorites(favorites, billShortTitleEnSort);
 
           return (
             <tr key={`row-${billNo}-${index}`} onClick={(e) => onRowClick(e, longTitleEn, longTitleGa)}>

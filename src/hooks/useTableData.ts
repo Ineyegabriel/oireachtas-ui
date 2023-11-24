@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { LegislationResult, Sponsor } from 'src/types/legislation';
 
 export type ExtractedDataType = {
@@ -18,7 +19,7 @@ export const tableHeaderData = ['Bill Number', 'Bill Type', 'Status', 'Sponsor']
  * @param sponsors Array of sponsors
  * @returns String of sponsor names
  */
-const useTransformedSponsors = (sponsors: Sponsor[]) => {
+const getTransformedSponsors = (sponsors: Sponsor[]) => {
   return sponsors
     .map(({ sponsor: { as } }) => as.showAs)
     .join(' ')
@@ -35,26 +36,27 @@ export const useTableData = (collection: LegislationResult[]) => {
   if (!Array.isArray(collection)) {
     throw new Error('Invalid collection');
   }
+  const tableData: ExtractedDataType[] = useMemo(() => {
+    // Transform the collection into a tableData array
+    return collection.map((prop) => {
+      const {
+        bill: { billNo, billType, status, sponsors, longTitleEn, longTitleGa },
+        billSort: { billNoSort, billShortTitleEnSort },
+      } = prop;
 
-  const tableData: ExtractedDataType[] = collection.map((prop) => {
-    const {
-      bill: { billNo, billType, status, sponsors, longTitleEn, longTitleGa },
-      billSort: { billNoSort, billShortTitleEnSort },
-    } = prop;
+      const extractedSponsors = getTransformedSponsors(sponsors);
 
-    const extractedSponsors = useTransformedSponsors(sponsors);
-
-    return {
-      billNo,
-      billType,
-      status,
-      sponsors: extractedSponsors,
-      longTitleEn,
-      longTitleGa,
-      billNoSort,
-      billShortTitleEnSort,
-    };
-  });
-
+      return {
+        billNo,
+        billType,
+        status,
+        sponsors: extractedSponsors,
+        longTitleEn,
+        longTitleGa,
+        billNoSort,
+        billShortTitleEnSort,
+      };
+    });
+  }, [collection]);
   return { tableData };
 };
